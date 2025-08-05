@@ -1,0 +1,127 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+body {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.admin-container {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+    margin-bottom: 2rem;
+}
+
+.schedule-form {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.schedule-form input {
+    flex: 1;
+    padding: 0.8rem;
+    border-radius: 5px;
+    border: 1px solid #00ff00;
+    background-color: #2a2a2a;
+    color: #ffffff;
+    font-size: 1rem;
+}
+
+.schedule-form button {
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    border: none;
+    background-color: #00ff00;
+    color: #1a1a1a;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.schedule-form button:hover {
+    background-color: #00cc00;
+    box-shadow: 0 0 10px #00ff00;
+}
+
+.schedule-list {
+    list-style: none;
+    padding: 0;
+}
+
+.schedule-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2a2a2a;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    border-left: 5px solid #00ff00;
+}
+
+.schedule-item span {
+    font-size: 1.2rem;
+}
+
+.schedule-item button {
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border: none;
+    background-color: #ff0000;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.schedule-item .actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.schedule-item .edit-form {
+    display: flex;
+    flex-grow: 1;
+    gap: 1rem;
+}
+
+.schedule-item .edit-form input {
+    flex: 1;
+    padding: 0.5rem;
+    border-radius: 3px;
+    border: 1px solid #00ff00;
+    background-color: #3a3a3a;
+    color: #ffffff;
+}
+
+.schedule-item button.edit-btn {
+    background-color: #ffa500;
+}
+
+.schedule-item button.edit-btn:hover {
+    background-color: #cc8400;
+}
+
+.schedule-item button.save-btn {
+    background-color: #00ff00;
+    color: #1a1a1a;
+}
+
+.schedule-item button.save-btn:hover {
+    background-color: #00cc00;
+}
+
+.schedule-item button.cancel-btn {
+    background-color: #888;
+}
+
+
