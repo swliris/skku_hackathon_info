@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/skku_hackathon_info/static/css/main.1e43197c.css",
-    "main.js": "/skku_hackathon_info/static/js/main.867c6fd8.js",
+    "main.js": "/skku_hackathon_info/static/js/main.c78cbd5d.js",
     "static/js/453.a5a847af.chunk.js": "/skku_hackathon_info/static/js/453.a5a847af.chunk.js",
     "index.html": "/skku_hackathon_info/index.html",
     "main.1e43197c.css.map": "/skku_hackathon_info/static/css/main.1e43197c.css.map",
-    "main.867c6fd8.js.map": "/skku_hackathon_info/static/js/main.867c6fd8.js.map",
+    "main.c78cbd5d.js.map": "/skku_hackathon_info/static/js/main.c78cbd5d.js.map",
     "453.a5a847af.chunk.js.map": "/skku_hackathon_info/static/js/453.a5a847af.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.1e43197c.css",
-    "static/js/main.867c6fd8.js"
+    "static/js/main.c78cbd5d.js"
   ]
 }
