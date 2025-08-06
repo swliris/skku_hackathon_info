@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import './Main.css';
+import logo from '../assets/images/logo_full_white.svg'
 
 function Main() {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -8,6 +9,12 @@ function Main() {
   const [nextSchedule, setNextSchedule] = useState(null);
   const [countdown, setCountdown] = useState('');
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleNavClick = (tab) => {
+    setActiveTab(tab);
+    setIsMenuOpen(false);
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -118,7 +125,6 @@ function Main() {
                 )}
             </div>
             <div className="schedule-board">
-              <h2>SCHEDULE</h2>
               {schedules.length > 0 ? (
                   <ul className="timeline">
                   {schedules.map((schedule, index) => (
@@ -146,11 +152,24 @@ function Main() {
         <div className="stars2"></div>
         <div className="stars3"></div>
       </div>
+      <div className="top-nav">
+        <button className="menu-icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <div className="menu-icon-bar"></div>
+          <div className="menu-icon-bar"></div>
+          <div className="menu-icon-bar"></div>
+        </button>
+        {isMenuOpen && (
+          <div className="menu-items">
+            <button onClick={() => handleNavClick('title')} className={`nav-btn ${activeTab === 'title' ? 'active' : ''}`}>Title</button>
+            <button onClick={() => handleNavClick('clock')} className={`nav-btn ${activeTab === 'clock' ? 'active' : ''}`}>Clock</button>
+            <button onClick={() => handleNavClick('dashboard')} className={`nav-btn ${activeTab === 'dashboard' ? 'active' : ''}`}>Dashboard</button>
+          </div>
+        )}
+      </div>
       {renderContent()}
-      <div className="bottom-nav">
-        <button onClick={() => setActiveTab('title')} className={`nav-btn ${activeTab === 'title' ? 'active' : ''}`}>Title</button>
-        <button onClick={() => setActiveTab('clock')} className={`nav-btn ${activeTab === 'clock' ? 'active' : ''}`}>Clock</button>
-        <button onClick={() => setActiveTab('dashboard')} className={`nav-btn ${activeTab === 'dashboard' ? 'active' : ''}`}>Dashboard</button>
+      <div className="bottom-logo-container">
+        {/* 로고 이미지를 여기에 추가하세요 */}
+        <img className='logo-image' src={logo} alt="Logo" />
       </div>
     </>
   );
