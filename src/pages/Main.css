@@ -271,4 +271,79 @@ h2 {
     text-shadow: 0 0 10px #ff4d4d;
 }
 
+@media (max-width: 768px) {
+    .main-container.layout-split {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .main-container .clock-wrapper {
+        flex: 0 0 auto; /* Do not grow or shrink */
+        padding-right: 0;
+        padding-bottom: 1rem;
+        position: -webkit-sticky; /* For Safari */
+        position: sticky;
+        top: 0;
+        background: transparent;
+        z-index: 1;
+    }
+
+    .main-container.layout-split .schedule-board {
+        flex: 1 1 auto; /* Grow to fill remaining space */
+        border-left: none;
+        border-top: 2px solid #00ffde;
+        padding: 1rem;
+        height: auto; /* Remove fixed height */
+        max-height: calc(100vh - 200px); /* Adjust as needed */
+    }
+
+    .clock {
+        font-size: 4rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .main-title {
+        font-size: 3rem;
+    }
+
+    .timeline-item {
+        padding: 0.8rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .timeline-time,
+    .timeline-event {
+        font-size: 1.2rem;
+    }
+
+    .timeline-time {
+        width: 120px;
+    }
+
+    .countdown-container {
+        margin-top: 0.5rem;
+    }
+
+    .countdown-label {
+        font-size: 1.2rem;
+    }
+
+    .countdown-timer {
+        font-size: 2.5rem;
+    }
+
+    .top-nav {
+        top: 1rem;
+        left: 1rem;
+    }
+
+    .bottom-logo-container {
+        margin: 1rem;
+    }
+
+    .logo-image {
+        width: 6rem;
+    }
+}
+
 
