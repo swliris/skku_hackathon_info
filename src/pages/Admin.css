@@ -120,8 +120,21 @@ h1 {
     background-color: #00cc00;
 }
 
-.schedule-item button.cancel-btn {
-    background-color: #888;
+.schedule-item.important {
+    border-left-color: #ff4d4d;
+}
+
+.important-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #00ff00;
+    font-size: 1rem;
+}
+
+.important-checkbox input {
+    width: auto;
+    flex: 0;
 }
 
 

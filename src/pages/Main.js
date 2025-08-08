@@ -50,7 +50,7 @@ function Main() {
     const now = currentTime;
     const nowTime = now.toTimeString().slice(0, 5);
 
-    const upcomingSchedules = schedules.filter(s => s.time > nowTime);
+    const upcomingSchedules = schedules.filter(s => s.time > nowTime && s.event.includes('Important'));
 
     if (upcomingSchedules.length > 0) {
       const next = upcomingSchedules[0];
@@ -119,7 +119,7 @@ function Main() {
                 <div className="clock">{formatTime(currentTime)}</div>
                 {nextSchedule && (
                     <div className="countdown-container">
-                    <div className="countdown-label">Next: {nextSchedule.event}</div>
+                    <div className="countdown-label">Next: {nextSchedule.event.replace('Important: ', '')}</div>
                     <div className="countdown-timer">{countdown} left</div>
                     </div>
                 )}
@@ -130,7 +130,7 @@ function Main() {
                   {schedules.map((schedule, index) => (
                       <li key={schedule.id} className={`timeline-item ${index === currentScheduleIndex ? 'active' : ''}`}>
                       <span className="timeline-time">{schedule.time}</span>
-                      <span className="timeline-event">{schedule.event}</span>
+                      <span className="timeline-event">{schedule.event.replace('Important: ', '')}</span>
                       </li>
                   ))}
                   </ul>
