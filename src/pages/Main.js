@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Main.css';
 import logo from '../assets/images/logo_full_white.svg'
+import supabase from '../supabaseClient'; // Import the supabase client
 
 function Main() {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -10,10 +11,54 @@ function Main() {
   const [countdown, setCountdown] = useState('');
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [theme, setTheme] = useState('dark');
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: light)');
+    const handleChange = (e) => setTheme(e.matches ? 'light' : 'dark');
+
+    mediaQuery.addEventListener('change', handleChange);
+    setTheme(mediaQuery.matches ? 'light' : 'dark'); // Set initial theme
+
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  useEffect(() => {
+    document.body.setAttribute('data-theme', theme);
+  }, [theme]);
 
   const handleNavClick = (tab) => {
     setActiveTab(tab);
     setIsMenuOpen(false);
+  };
+
+  useEffect(() => {
+    fetchSchedules();
+
+    const channel = supabase
+      .channel('timetable')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'timetable' }, (payload) => {
+        console.log('Change received!', payload);
+        fetchSchedules(); // Refetch on any change
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const fetchSchedules = async () => {
+    const { data, error } = await supabase
+      .from('timetable')
+      .select('*')
+      .order('start_time', { ascending: true });
+
+    if (error) {
+      console.error('Error fetching schedules:', error);
+    } else {
+      setSchedules(data);
+    }
   };
 
   useEffect(() => {
@@ -24,39 +69,18 @@ function Main() {
   }, []);
 
   useEffect(() => {
-    const handleStorageChange = (event) => {
-        if (event.key === 'schedules') {
-            const updatedSchedules = event.newValue ? JSON.parse(event.newValue) : [];
-            setSchedules(updatedSchedules);
-        }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
-    // Initial load
-    const savedSchedules = localStorage.getItem('schedules');
-    if (savedSchedules) {
-      setSchedules(JSON.parse(savedSchedules));
-    }
-
-    return () => {
-        window.removeEventListener('storage', handleStorageChange);
-    };
-  }, []);
-
-  useEffect(() => {
     if (schedules.length === 0) return;
 
     const now = currentTime;
     const nowTime = now.toTimeString().slice(0, 5);
 
-    const upcomingSchedules = schedules.filter(s => s.time > nowTime && s.event.includes('Important'));
+    const upcomingSchedules = schedules.filter(s => s.start_time > nowTime && s.is_important);
 
     if (upcomingSchedules.length > 0) {
       const next = upcomingSchedules[0];
       setNextSchedule(next);
 
-      const [hours, minutes] = next.time.split(':');
+      const [hours, minutes] = next.start_time.split(':');
       const nextEventTime = new Date();
       nextEventTime.setHours(hours, minutes, 0, 0);
 
@@ -87,7 +111,7 @@ function Main() {
     const nowTime = currentTime.toTimeString().slice(0, 5);
     let activeIndex = -1;
     for (let i = schedules.length - 1; i >= 0; i--) {
-        if (schedules[i].time <= nowTime) {
+        if (schedules[i].start_time <= nowTime) {
             activeIndex = i;
             break;
         }
@@ -119,7 +143,7 @@ function Main() {
                 <div className="clock">{formatTime(currentTime)}</div>
                 {nextSchedule && (
                     <div className="countdown-container">
-                    <div className="countdown-label">Next: {nextSchedule.event.replace('Important: ', '')}</div>
+                    <div className="countdown-label">Next: {nextSchedule.name}</div>
                     <div className="countdown-timer">{countdown} left</div>
                     </div>
                 )}
@@ -129,8 +153,8 @@ function Main() {
                   <ul className="timeline">
                   {schedules.map((schedule, index) => (
                       <li key={schedule.id} className={`timeline-item ${index === currentScheduleIndex ? 'active' : ''}`}>
-                      <span className="timeline-time">{schedule.time}</span>
-                      <span className="timeline-event">{schedule.event.replace('Important: ', '')}</span>
+                      <span className="timeline-time">{schedule.start_time.slice(0, 5)}</span>
+                      <span className="timeline-event">{schedule.name}</span>
                       </li>
                   ))}
                   </ul>
@@ -147,11 +171,17 @@ function Main() {
 
   return (
     <>
-      <div className="stars-container">
-        <div className="stars"></div>
-        <div className="stars2"></div>
-        <div className="stars3"></div>
-      </div>
+      {theme === 'dark' ? (
+        <div className="stars-container">
+          <div className="stars"></div>
+          <div className="stars2"></div>
+          <div className="stars3"></div>
+        </div>
+      ) : (
+        <div className="orange-shine-container">
+          <div className="orange-shine"></div>
+        </div>
+      )}
       <div className="top-nav">
         <button className="menu-icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
           <div className="menu-icon-bar"></div>

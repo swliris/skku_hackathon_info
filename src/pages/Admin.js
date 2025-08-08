@@ -1,109 +1,148 @@
 
 import React, { useState, useEffect } from 'react';
+import supabase from '../supabaseClient'; // Import the supabase client
 import './Admin.css';
 
-const getInitialSchedules = () => {
-  try {
-    const savedSchedules = localStorage.getItem('schedules');
-    return savedSchedules ? JSON.parse(savedSchedules) : [];
-  } catch (error) {
-    console.error("Failed to parse schedules from localStorage", error);
-    return [];
-  }
-};
-
 function Admin() {
-  const [schedules, setSchedules] = useState(getInitialSchedules);
-  const [time, setTime] = useState('');
-  const [event, setEvent] = useState('');
+  const [schedules, setSchedules] = useState([]);
+  const [startTime, setStartTime] = useState('');
+  const [name, setName] = useState('');
   const [isImportant, setIsImportant] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  const [editingTime, setEditingTime] = useState('');
-  const [editingEvent, setEditingEvent] = useState('');
+  const [editingStartTime, setEditingStartTime] = useState('');
+  const [editingName, setEditingName] = useState('');
   const [editingIsImportant, setEditingIsImportant] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    localStorage.setItem('schedules', JSON.stringify(schedules));
-  }, [schedules]);
+    fetchSchedules();
+  }, []);
 
-  const handleAddSchedule = (e) => {
-    e.preventDefault();
-    if (!time || !event) return;
+  const fetchSchedules = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('timetable')
+      .select('*')
+      .order('start_time', { ascending: true });
 
-    const newSchedule = { id: Date.now(), time, event: isImportant ? `Important: ${event}` : event, isImportant };
-    const updatedSchedules = [...schedules, newSchedule].sort((a, b) => a.time.localeCompare(b.time));
-    setSchedules(updatedSchedules);
-    setTime('');
-    setEvent('');
-    setIsImportant(false);
+    if (error) {
+      console.error('Error fetching schedules:', error);
+    } else {
+      setSchedules(data);
+    }
+    setLoading(false);
   };
 
-  const handleDeleteSchedule = (id) => {
-    setSchedules(schedules.filter((schedule) => schedule.id !== id));
+  const handleAddSchedule = async (e) => {
+    e.preventDefault();
+    if (!startTime || !name) return;
+
+    const { data, error } = await supabase
+      .from('timetable')
+      .insert([{ start_time: startTime.slice(0, 5), name, is_important: isImportant }])
+      .select();
+
+    if (error) {
+      console.error('Error adding schedule:', error);
+    } else if (data) {
+      setSchedules([...schedules, data[0]].sort((a, b) => a.start_time.localeCompare(b.start_time)));
+      setStartTime('');
+      setName('');
+      setIsImportant(false);
+    }
+  };
+
+  const handleDeleteSchedule = async (id) => {
+    const { error } = await supabase
+      .from('timetable')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error deleting schedule:', error);
+    } else {
+      setSchedules(schedules.filter((schedule) => schedule.id !== id));
+    }
   };
 
   const handleEdit = (schedule) => {
     setEditingId(schedule.id);
-    setEditingTime(schedule.time);
-    setEditingEvent(schedule.event.replace('Important: ', ''));
-    setEditingIsImportant(schedule.event.includes('Important: '));
+    setEditingStartTime(schedule.start_time);
+    setEditingName(schedule.name);
+    setEditingIsImportant(schedule.is_important);
   };
 
   const handleCancelEdit = () => {
     setEditingId(null);
-    setEditingTime('');
-    setEditingEvent('');
+    setEditingStartTime('');
+    setEditingName('');
     setEditingIsImportant(false);
   };
 
-  const handleUpdateSchedule = (id) => {
-    const updatedSchedules = schedules.map(s =>
-      s.id === id ? { ...s, time: editingTime, event: editingIsImportant ? `Important: ${editingEvent}` : editingEvent, isImportant: editingIsImportant } : s
-    ).sort((a, b) => a.time.localeCompare(b.time));
-    setSchedules(updatedSchedules);
-    handleCancelEdit();
+  const handleUpdateSchedule = async (id) => {
+    const { data, error } = await supabase
+      .from('timetable')
+      .update({ start_time: editingStartTime.slice(0, 5), name: editingName, is_important: editingIsImportant })
+      .eq('id', id)
+      .select();
+
+    if (error) {
+      console.error('Error updating schedule:', error);
+    } else if (data) {
+      const updatedSchedules = schedules.map(s => (s.id === id ? data[0] : s)).sort((a, b) => a.start_time.localeCompare(b.start_time));
+      setSchedules(updatedSchedules);
+      handleCancelEdit();
+    }
   };
 
   return (
     <div className="admin-container">
       <h1>Hackathon Schedule Admin</h1>
       <form onSubmit={handleAddSchedule} className="schedule-form">
-        <input type="time" value={time} onChange={(e) => setTime(e.target.value)} required />
-        <input type="text" placeholder="Event Description" value={event} onChange={(e) => setEvent(e.target.value)} required />
+        <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
+        <input type="text" placeholder="Event Name" value={name} onChange={(e) => setName(e.target.value)} required />
         <label className="important-checkbox">
           <input type="checkbox" checked={isImportant} onChange={(e) => setIsImportant(e.target.checked)} />
           Important
         </label>
         <button type="submit">Add Schedule</button>
       </form>
-      <ul className="schedule-list">
-        {schedules.map((schedule) => (
-          <li key={schedule.id} className={`schedule-item ${schedule.isImportant ? 'important' : ''}`}>
-            {editingId === schedule.id ? (
-              <div className="edit-form">
-                <input type="time" value={editingTime} onChange={(e) => setEditingTime(e.target.value)} />
-                <input type="text" value={editingEvent} onChange={(e) => setEditingEvent(e.target.value)} />
-                <label className="important-checkbox">
-                  <input type="checkbox" checked={editingIsImportant} onChange={(e) => setEditingIsImportant(e.target.checked)} />
-                  Important
-                </label>
-                <div className="actions">
-                  <button onClick={() => handleUpdateSchedule(schedule.id)} className="save-btn">Save</button>
-                  <button onClick={handleCancelEdit} className="cancel-btn">Cancel</button>
-                </div>
-              </div>
-            ) : (
-              <>
-                <span>{schedule.time} - {schedule.event}</span>
-                <div className="actions">
-                  <button onClick={() => handleEdit(schedule)} className="edit-btn">Edit</button>
-                  <button onClick={() => handleDeleteSchedule(schedule.id)}>Delete</button>
-                </div>
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
+      {loading ? (
+        <div className="loader-container"><div className="loader"></div></div>
+      ) : (
+        <ul className="schedule-list">
+          {schedules.length > 0 ? (
+            schedules.map((schedule) => (
+              <li key={schedule.id} className={`schedule-item ${schedule.is_important ? 'important' : ''}`}>
+                {editingId === schedule.id ? (
+                  <div className="edit-form">
+                    <input type="time" value={editingStartTime} onChange={(e) => setEditingStartTime(e.target.value)} />
+                    <input type="text" value={editingName} onChange={(e) => setEditingName(e.target.value)} />
+                    <label className="important-checkbox">
+                      <input type="checkbox" checked={editingIsImportant} onChange={(e) => setEditingIsImportant(e.target.checked)} />
+                      Important
+                    </label>
+                    <div className="actions">
+                      <button onClick={() => handleUpdateSchedule(schedule.id)} className="save-btn">Save</button>
+                      <button onClick={handleCancelEdit} className="cancel-btn">Cancel</button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <span>{schedule.start_time.slice(0, 5)} - {schedule.name}</span>
+                    <div className="actions">
+                      <button onClick={() => handleEdit(schedule)} className="edit-btn">Edit</button>
+                      <button onClick={() => handleDeleteSchedule(schedule.id)}>Delete</button>
+                    </div>
+                  </>
+                )}
+              </li>
+            ))
+          ) : (
+            <p className="no-schedule">No schedules found. Add one above.</p>
+          )}
+        </ul>
+      )}
     </div>
   );
 }
