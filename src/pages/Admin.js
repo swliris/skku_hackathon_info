@@ -15,7 +15,11 @@ function Admin() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    document.body.classList.add('admin-page-active');
     fetchSchedules();
+    return () => {
+      document.body.classList.remove('admin-page-active');
+    };
   }, []);
 
   const fetchSchedules = async () => {
@@ -97,52 +101,82 @@ function Admin() {
 
   return (
     <div className="admin-container">
-      <h1>Hackathon Schedule Admin</h1>
-      <form onSubmit={handleAddSchedule} className="schedule-form">
-        <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
-        <input type="text" placeholder="Event Name" value={name} onChange={(e) => setName(e.target.value)} required />
-        <label className="important-checkbox">
-          <input type="checkbox" checked={isImportant} onChange={(e) => setIsImportant(e.target.checked)} />
-          Important
-        </label>
-        <button type="submit">Add Schedule</button>
-      </form>
-      {loading ? (
-        <div className="loader-container"><div className="loader"></div></div>
-      ) : (
-        <ul className="schedule-list">
-          {schedules.length > 0 ? (
-            schedules.map((schedule) => (
-              <li key={schedule.id} className={`schedule-item ${schedule.is_important ? 'important' : ''}`}>
-                {editingId === schedule.id ? (
-                  <div className="edit-form">
-                    <input type="time" value={editingStartTime} onChange={(e) => setEditingStartTime(e.target.value)} />
-                    <input type="text" value={editingName} onChange={(e) => setEditingName(e.target.value)} />
-                    <label className="important-checkbox">
-                      <input type="checkbox" checked={editingIsImportant} onChange={(e) => setEditingIsImportant(e.target.checked)} />
-                      Important
-                    </label>
-                    <div className="actions">
-                      <button onClick={() => handleUpdateSchedule(schedule.id)} className="save-btn">Save</button>
-                      <button onClick={handleCancelEdit} className="cancel-btn">Cancel</button>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <span>{schedule.start_time.slice(0, 5)} - {schedule.name}</span>
-                    <div className="actions">
-                      <button onClick={() => handleEdit(schedule)} className="edit-btn">Edit</button>
-                      <button onClick={() => handleDeleteSchedule(schedule.id)}>Delete</button>
-                    </div>
-                  </>
-                )}
-              </li>
-            ))
+      <header className="admin-header">
+        <h1>해커톤 일정 관리</h1>
+      </header>
+      <div className="admin-grid">
+        <div className="card form-card">
+          <h2>새 일정 추가</h2>
+          <form onSubmit={handleAddSchedule} className="schedule-form">
+            <div className="form-group">
+              <label htmlFor="startTime">시간</label>
+              <input id="startTime" type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
+            </div>
+            <div className="form-group">
+              <label htmlFor="name">이벤트명</label>
+              <input id="name" type="text" placeholder="예: 오프닝 세레모니" value={name} onChange={(e) => setName(e.target.value)} required />
+            </div>
+            <div className="form-group">
+              <label htmlFor="isImportant" className="important-checkbox">
+                <input id="isImportant" type="checkbox" checked={isImportant} onChange={(e) => setIsImportant(e.target.checked)} />
+                <span>중요 이벤트로 표시 (카운트다운에 사용)</span>
+              </label>
+            </div>
+            <button type="submit" className="btn btn-primary">일정 추가</button>
+          </form>
+        </div>
+
+        <div className="card list-card">
+          <h2>현재 일정</h2>
+          {loading ? (
+            <p>로딩 중...</p>
           ) : (
-            <p className="no-schedule">No schedules found. Add one above.</p>
+            <table className="schedule-table">
+              <thead>
+                <tr>
+                  <th>시간</th>
+                  <th>이벤트</th>
+                  <th>중요</th>
+                  <th>관리</th>
+                </tr>
+              </thead>
+              <tbody>
+                {schedules.length > 0 ? (
+                  schedules.map((schedule) => (
+                    <tr key={schedule.id}>
+                      {editingId === schedule.id ? (
+                        <>
+                          <td><input type="time" value={editingStartTime} onChange={(e) => setEditingStartTime(e.target.value)} className="edit-form-input" /></td>
+                          <td><input type="text" value={editingName} onChange={(e) => setEditingName(e.target.value)} className="edit-form-input" /></td>
+                          <td><input type="checkbox" checked={editingIsImportant} onChange={(e) => setEditingIsImportant(e.target.checked)} /></td>
+                          <td className="actions">
+                            <button onClick={() => handleUpdateSchedule(schedule.id)} className="btn btn-sm btn-success">저장</button>
+                            <button onClick={handleCancelEdit} className="btn btn-sm btn-secondary">취소</button>
+                          </td>
+                        </>
+                      ) : (
+                        <>
+                          <td>{schedule.start_time.slice(0, 5)}</td>
+                          <td>{schedule.name}</td>
+                          <td>{schedule.is_important ? <span className="important-icon">✔</span> : ''}</td>
+                          <td className="actions">
+                            <button onClick={() => handleEdit(schedule)} className="btn btn-sm btn-warning">수정</button>
+                            <button onClick={() => handleDeleteSchedule(schedule.id)} className="btn btn-sm btn-danger">삭제</button>
+                          </td>
+                        </>
+                      )}
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4" className="no-schedule">등록된 일정이 없습니다.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           )}
-        </ul>
-      )}
+        </div>
+      </div>
     </div>
   );
 }

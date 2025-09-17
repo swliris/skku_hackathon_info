@@ -1,140 +1,195 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+body.admin-page-active {
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-color: #212529;
+    --subtle-text-color: #6c757d;
+    --border-color: #dee2e6;
+    --primary-color: #007bff;
+    --primary-hover-color: #0056b3;
+    --danger-color: #dc3545;
+    --danger-hover-color: #a71d2a;
+    --warning-color: #ffc107;
+    --warning-hover-color: #d39e00;
+    --font-family: 'Inter', sans-serif;
 
-body {
-    background-color: #1a1a1a;
-    color: #ffffff;
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
 }
 
 .admin-container {
-    padding: 2rem;
-    max-width: 800px;
+    padding: 40px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
-h1 {
+.admin-header {
     text-align: center;
-    color: #00ff00;
-    text-shadow: 0 0 5px #00ff00;
-    margin-bottom: 2rem;
+    margin-bottom: 40px;
 }
 
-.schedule-form {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
+.admin-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
 }
 
-.schedule-form input {
-    flex: 1;
-    padding: 0.8rem;
-    border-radius: 5px;
-    border: 1px solid #00ff00;
-    background-color: #2a2a2a;
-    color: #ffffff;
+.admin-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 40px;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+}
+
+.card h2 {
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+/* Form styles */
+.schedule-form .form-group {
+    margin-bottom: 20px;
+}
+
+.schedule-form label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.schedule-form input[type="time"],
+.schedule-form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
     font-size: 1rem;
-}
-
-.schedule-form button {
-    padding: 0.8rem 1.5rem;
-    border-radius: 5px;
-    border: none;
-    background-color: #00ff00;
-    color: #1a1a1a;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s, box-shadow 0.3s;
-}
-
-.schedule-form button:hover {
-    background-color: #00cc00;
-    box-shadow: 0 0 10px #00ff00;
-}
-
-.schedule-list {
-    list-style: none;
-    padding: 0;
-}
-
-.schedule-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #2a2a2a;
-    padding: 1rem;
-    border-radius: 5px;
-    margin-bottom: 1rem;
-    border-left: 5px solid #00ff00;
-}
-
-.schedule-item span {
-    font-size: 1.2rem;
-}
-
-.schedule-item button {
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    border: none;
-    background-color: #ff0000;
-    color: #ffffff;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.schedule-item .actions {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.schedule-item .edit-form {
-    display: flex;
-    flex-grow: 1;
-    gap: 1rem;
-}
-
-.schedule-item .edit-form input {
-    flex: 1;
-    padding: 0.5rem;
-    border-radius: 3px;
-    border: 1px solid #00ff00;
-    background-color: #3a3a3a;
-    color: #ffffff;
-}
-
-.schedule-item button.edit-btn {
-    background-color: #ffa500;
-}
-
-.schedule-item button.edit-btn:hover {
-    background-color: #cc8400;
-}
-
-.schedule-item button.save-btn {
-    background-color: #00ff00;
-    color: #1a1a1a;
-}
-
-.schedule-item button.save-btn:hover {
-    background-color: #00cc00;
-}
-
-.schedule-item.important {
-    border-left-color: #ff4d4d;
+    box-sizing: border-box;
 }
 
 .important-checkbox {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    color: #00ff00;
+    gap: 10px;
+    user-select: none;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: none;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover-color);
+}
+
+/* Table styles */
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.schedule-table th, .schedule-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.schedule-table thead th {
+    font-weight: 700;
+    color: var(--subtle-text-color);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.schedule-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.schedule-table .actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+}
+
+.btn-warning {
+    background-color: var(--warning-color);
+    color: #212529;
+}
+.btn-warning:hover { background-color: var(--warning-hover-color); }
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+.btn-danger:hover { background-color: var(--a71d2a); }
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+.btn-success:hover { background-color: #1e7e34; }
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+.btn-secondary:hover { background-color: #5a6268; }
+
+.edit-form input {
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
     font-size: 1rem;
 }
 
-.important-checkbox input {
-    width: auto;
-    flex: 0;
+.important-icon {
+    color: var(--danger-color);
+    font-weight: 700;
 }
 
+.no-schedule {
+    text-align: center;
+    padding: 40px;
+    color: var(--subtle-text-color);
+}
 
+/* Responsive */
+@media (max-width: 992px) {
+    .admin-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-container { padding: 20px; }
+    .admin-grid { gap: 20px; }
+    .card { padding: 20px; }
+}
