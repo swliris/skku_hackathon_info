@@ -25,7 +25,7 @@ body {
     width: 100%;
     height: 100%;
     z-index: -1;
-    background: linear-gradient(45deg, #020111, #191621, #0d1117, #240046);
+    background: linear-gradient(45deg, #000000, #002244, #430d4b, #58181F);
     background-size: 600% 600%;
     animation: gradientAnimation 30s ease infinite;
 }
