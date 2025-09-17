@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Sixtyfour&display=swap');
 
 :root {
     --font-family: 'Inter', sans-serif;
@@ -51,8 +51,9 @@ body {
 }
 
 .main-title {
-    font-size: 3rem;
-    font-weight: 900;
+    font-family: 'Sixtyfour', sans-serif;
+    font-size: 4rem;
+    font-weight: 400;
     letter-spacing: 2px;
     text-transform: uppercase;
     margin: 0;

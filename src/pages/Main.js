@@ -111,7 +111,7 @@ function Main() {
       <div className="aurora-background"></div>
       <div className="main-grid">
         <header className="header">
-          <h1 className="main-title">10 TO 10 HACKATHON</h1>
+          <h1 className="main-title">Casual HACKATHON</h1>
         </header>
 
         <div className="left-panel content-panel">
