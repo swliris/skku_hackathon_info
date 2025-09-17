@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/skku_hackathon_info/static/css/main.46f0830f.css",
-    "main.js": "/skku_hackathon_info/static/js/main.792077f6.js",
+    "main.css": "/skku_hackathon_info/static/css/main.43d6f3ff.css",
+    "main.js": "/skku_hackathon_info/static/js/main.79145a51.js",
     "static/js/453.a5a847af.chunk.js": "/skku_hackathon_info/static/js/453.a5a847af.chunk.js",
     "index.html": "/skku_hackathon_info/index.html",
-    "main.46f0830f.css.map": "/skku_hackathon_info/static/css/main.46f0830f.css.map",
-    "main.792077f6.js.map": "/skku_hackathon_info/static/js/main.792077f6.js.map",
+    "main.43d6f3ff.css.map": "/skku_hackathon_info/static/css/main.43d6f3ff.css.map",
+    "main.79145a51.js.map": "/skku_hackathon_info/static/js/main.79145a51.js.map",
     "453.a5a847af.chunk.js.map": "/skku_hackathon_info/static/js/453.a5a847af.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.46f0830f.css",
-    "static/js/main.792077f6.js"
+    "static/css/main.43d6f3ff.css",
+    "static/js/main.79145a51.js"
   ]
 }
