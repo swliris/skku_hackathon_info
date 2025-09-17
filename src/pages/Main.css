@@ -36,6 +36,23 @@ body {
     100% { background-position: 0% 50%; }
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+}
+
 .main-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -48,6 +65,8 @@ body {
 .header {
     grid-column: 1 / -1;
     text-align: center;
+    animation: fadeIn 0.8s ease-out forwards;
+    opacity: 0;
 }
 
 .main-title {
@@ -78,6 +97,8 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
+    animation: fadeIn 0.8s 0.2s ease-out forwards;
+    opacity: 0;
 }
 
 .clock {
@@ -120,6 +141,8 @@ body {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
     overflow-y: auto;
+    animation: fadeIn 0.8s 0.4s ease-out forwards;
+    opacity: 0;
 }
 
 .schedule-panel::-webkit-scrollbar {
@@ -148,6 +171,12 @@ body {
 
 .timeline-item.active {
     background-color: rgba(0, 255, 222, 0.1);
+}
+
+.timeline-item.active .timeline-time,
+.timeline-item.active .timeline-event {
+    animation: pulse 2.5s infinite ease-in-out;
+    color: var(--glow-color);
 }
 
 .timeline-time {
