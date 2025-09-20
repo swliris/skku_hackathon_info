@@ -66,6 +66,7 @@ body {
     grid-column: 1 / -1;
     text-align: center;
     animation: fadeIn 0.8s ease-out forwards;
+    margin-bottom: 2rem;
     opacity: 0;
 }
 
