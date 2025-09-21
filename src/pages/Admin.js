@@ -7,10 +7,12 @@ function Admin() {
   const [schedules, setSchedules] = useState([]);
   const [startTime, setStartTime] = useState('');
   const [name, setName] = useState('');
+  const [name_english, setNameEnglish] = useState('');
   const [isImportant, setIsImportant] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [editingStartTime, setEditingStartTime] = useState('');
   const [editingName, setEditingName] = useState('');
+  const [editingNameEnglish, setEditingNameEnglish] = useState('');
   const [editingIsImportant, setEditingIsImportant] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -43,7 +45,7 @@ function Admin() {
 
     const { data, error } = await supabase
       .from('timetable')
-      .insert([{ start_time: startTime.slice(0, 5), name, is_important: isImportant }])
+      .insert([{ start_time: startTime.slice(0, 5), name, name_english, is_important: isImportant }])
       .select();
 
     if (error) {
@@ -52,6 +54,7 @@ function Admin() {
       setSchedules([...schedules, data[0]].sort((a, b) => a.start_time.localeCompare(b.start_time)));
       setStartTime('');
       setName('');
+      setNameEnglish('');
       setIsImportant(false);
     }
   };
@@ -73,6 +76,7 @@ function Admin() {
     setEditingId(schedule.id);
     setEditingStartTime(schedule.start_time);
     setEditingName(schedule.name);
+    setEditingNameEnglish(schedule.name_english || '');
     setEditingIsImportant(schedule.is_important);
   };
 
@@ -80,13 +84,14 @@ function Admin() {
     setEditingId(null);
     setEditingStartTime('');
     setEditingName('');
+    setEditingNameEnglish('');
     setEditingIsImportant(false);
   };
 
   const handleUpdateSchedule = async (id) => {
     const { data, error } = await supabase
       .from('timetable')
-      .update({ start_time: editingStartTime.slice(0, 5), name: editingName, is_important: editingIsImportant })
+      .update({ start_time: editingStartTime.slice(0, 5), name: editingName, name_english: editingNameEnglish, is_important: editingIsImportant })
       .eq('id', id)
       .select();
 
@@ -117,6 +122,10 @@ function Admin() {
               <input id="name" type="text" placeholder="예: 오프닝 세레모니" value={name} onChange={(e) => setName(e.target.value)} required />
             </div>
             <div className="form-group">
+              <label htmlFor="name_english">이벤트명 (영문)</label>
+              <input id="name_english" type="text" placeholder="예: Opening Ceremony" value={name_english} onChange={(e) => setNameEnglish(e.target.value)} />
+            </div>
+            <div className="form-group">
               <label htmlFor="isImportant" className="important-checkbox">
                 <input id="isImportant" type="checkbox" checked={isImportant} onChange={(e) => setIsImportant(e.target.checked)} />
                 <span>중요 이벤트로 표시 (카운트다운에 사용)</span>
@@ -136,6 +145,7 @@ function Admin() {
                 <tr>
                   <th>시간</th>
                   <th>이벤트</th>
+                  <th>이벤트 (영문)</th>
                   <th>중요</th>
                   <th>관리</th>
                 </tr>
@@ -148,6 +158,7 @@ function Admin() {
                         <>
                           <td><input type="time" value={editingStartTime} onChange={(e) => setEditingStartTime(e.target.value)} className="edit-form-input" /></td>
                           <td><input type="text" value={editingName} onChange={(e) => setEditingName(e.target.value)} className="edit-form-input" /></td>
+                          <td><input type="text" value={editingNameEnglish} onChange={(e) => setEditingNameEnglish(e.target.value)} className="edit-form-input" /></td>
                           <td><input type="checkbox" checked={editingIsImportant} onChange={(e) => setEditingIsImportant(e.target.checked)} /></td>
                           <td className="actions">
                             <button onClick={() => handleUpdateSchedule(schedule.id)} className="btn btn-sm btn-success">저장</button>
@@ -158,6 +169,7 @@ function Admin() {
                         <>
                           <td>{schedule.start_time.slice(0, 5)}</td>
                           <td>{schedule.name}</td>
+                          <td>{schedule.name_english}</td>
                           <td>{schedule.is_important ? <span className="important-icon">✔</span> : ''}</td>
                           <td className="actions">
                             <button onClick={() => handleEdit(schedule)} className="btn btn-sm btn-warning">수정</button>
@@ -169,7 +181,7 @@ function Admin() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="4" className="no-schedule">등록된 일정이 없습니다.</td>
+                    <td colSpan="5" className="no-schedule">등록된 일정이 없습니다.</td>
                   </tr>
                 )}
               </tbody>

@@ -124,7 +124,10 @@ function Main() {
           </div>
           {nextSchedule && (
             <div className="countdown-wrapper">
-              <div className="countdown-label">Next: {nextSchedule.name}</div>
+              <div className="countdown-label">
+                Next: {nextSchedule.name}{' '}
+                <span className="next-schedule-english">{nextSchedule.name_english}</span>
+              </div>
               <div className="countdown-timer">-{countdown}</div>
             </div>
           )}
@@ -134,9 +137,12 @@ function Main() {
           {schedules.length > 0 ? (
             <ul className="timeline">
               {schedules.map((schedule, index) => (
-                <li key={schedule.id} className={`timeline-item ${index === currentScheduleIndex ? 'active' : ''}`}>
+                <li key={schedule.id} className="timeline-item">
                   <span className="timeline-time">{schedule.start_time.slice(0, 5)}</span>
-                  <span className="timeline-event">{schedule.name}</span>
+                  <div className="timeline-event-container">
+                    <span className="timeline-event">{schedule.name}</span>
+                    <span className="timeline-event-english">{schedule.name_english}</span>
+                  </div>
                 </li>
               ))}
             </ul>
